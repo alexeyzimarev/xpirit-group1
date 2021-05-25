@@ -19,6 +19,17 @@ namespace Hotel.Bookings.Domain.Bookings {
             EnsureDoesntExist();
             await EnsureRoomAvailable(roomId, period, isRoomAvailable);
 
+            ChangeState(
+                State with {
+                    Id = bookingId,
+                    GuestId = guestId,
+                    RoomId = roomId,
+                    Price = price,
+                    Period = period,
+                    Outstanding = price,
+                    Paid = price == 0
+                }
+            );
         }
 
         public void RecordPayment(
@@ -28,13 +39,6 @@ namespace Hotel.Bookings.Domain.Bookings {
             DateTimeOffset  paidAt
         ) {
             EnsureExists();
-
-        }
-
-        public void ApplyDiscount(
-            Money           discount,
-            ConvertCurrency convertCurrency
-        ) {
         }
 
         static async Task EnsureRoomAvailable(RoomId roomId, StayPeriod period, IsRoomAvailable isRoomAvailable) {
