@@ -13,7 +13,6 @@ namespace Hotel.Bookings.Domain.Bookings {
             RoomId          roomId,
             StayPeriod      period,
             Money           price,
-            string          bookedBy,
             DateTimeOffset  bookedAt,
             IsRoomAvailable isRoomAvailable
         ) {

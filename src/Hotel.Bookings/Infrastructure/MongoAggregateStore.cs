@@ -35,9 +35,5 @@ namespace Hotel.Bookings.Infrastructure {
             var aggregate = new T {State = state};
             return aggregate;
         }
-
-        public Task<bool> Exists<T, TId, TState>(TId id, CancellationToken cancellationToken)
-            where T : Aggregate<TId, TState> where TId : AggregateId where TState : AggregateState<TId>
-            => _database.DocumentExists<TState>(id, cancellationToken);
     }
 }
