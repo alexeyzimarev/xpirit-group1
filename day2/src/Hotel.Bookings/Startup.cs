@@ -4,6 +4,7 @@ using Eventuous;
 using Eventuous.EventStoreDB;
 using Hotel.Bookings.Application.Bookings;
 using Hotel.Bookings.Domain;
+using Hotel.Bookings.Domain.Bookings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,8 @@ namespace Hotel.Bookings {
         IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services) {
+            BookingEvents.MapEvents();
+            
             // Infrastructure
             services.AddSingleton(
                 ConfigureMongo(
@@ -29,12 +32,13 @@ namespace Hotel.Bookings {
             services.AddEventStoreClient(Configuration["EventStore:ConnectionString"]);
             services.AddSingleton<IEventStore, EsdbEventStore>();
             services.AddSingleton<IAggregateStore, AggregateStore>();
+            services.AddSingleton(DefaultEventSerializer.Instance);
 
             // Application
             services.AddSingleton<BookingsCommandService>();
 
             // Domain services
-            services.AddSingleton<Services.IsRoomAvailable>(((id, period) => new ValueTask<bool>(true)));
+            services.AddSingleton<Services.IsRoomAvailable>((id, period) => new ValueTask<bool>(true));
             services.AddSingleton<Services.ConvertCurrency>((from, currency) => new Money(from.Amount * 2, currency));
 
             // API

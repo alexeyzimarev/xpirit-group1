@@ -1,4 +1,5 @@
 using System;
+using Eventuous;
 
 namespace Hotel.Bookings.Domain.Bookings {
     public static class BookingEvents {
@@ -15,5 +16,9 @@ namespace Hotel.Bookings.Domain.Bookings {
             bool           Paid,
             DateTimeOffset BookingDate
         );
+        
+        public static void MapEvents() {
+            TypeMap.AddType<RoomBooked>("V1.RoomBooked");
+        }
     }
 }

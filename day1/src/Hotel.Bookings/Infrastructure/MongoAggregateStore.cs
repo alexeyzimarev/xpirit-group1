@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreLib;
@@ -15,9 +17,25 @@ namespace Hotel.Bookings.Infrastructure {
             _logger   = logger;
         }
 
+        record EventDocument : Document {
+            public string EventType { get; init; }
+            public object Payload   { get; init; }
+        }
+
         public async Task Store<T, TId, TState>(T aggregate, CancellationToken cancellationToken)
             where T : Aggregate<TId, TState> where TId : AggregateId where TState : AggregateState<TId> {
             var expectNew = aggregate.State.InitialVersionMatches(-1);
+
+            var events = aggregate.Changes.Select(
+                x => new EventDocument {
+                    Id        = Guid.NewGuid().ToString(),
+                    EventType = x.GetType().Name,
+                    Payload   = x
+                }
+            );
+
+            await _database.GetDocumentCollection<EventDocument>()
+                .InsertManyAsync(events, cancellationToken: cancellationToken);
 
             var result = await _database.ReplaceDocument(
                 aggregate.State,

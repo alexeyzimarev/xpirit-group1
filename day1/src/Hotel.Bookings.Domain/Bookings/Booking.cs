@@ -39,13 +39,26 @@ namespace Hotel.Bookings.Domain.Bookings {
             );
         }
 
-        public void RecordPayment(
-            Money           paid,
-            ConvertCurrency convertCurrency,
-            string          paidBy,
-            DateTimeOffset  paidAt
+        public void ApplyDiscount(
+            Money           discount,
+            ConvertCurrency convertCurrency
         ) {
             EnsureExists();
+            
+            ChangeState(State with {
+                Outstanding = State.Outstanding - discount
+            });
+        }
+
+        public void RecordPayment(
+            Money           paid,
+            ConvertCurrency convertCurrency
+        ) {
+            EnsureExists();
+            
+            ChangeState(State with {
+                Outstanding = State.Outstanding - paid
+            });
         }
 
         static async Task EnsureRoomAvailable(RoomId roomId, StayPeriod period, IsRoomAvailable isRoomAvailable) {

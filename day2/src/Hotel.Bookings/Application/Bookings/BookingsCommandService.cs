@@ -22,6 +22,11 @@ namespace Hotel.Bookings.Application.Bookings {
                     );
                 }
             );
+            
+            OnExisting<BookingCommands.RecordPayment>(
+                cmd => new BookingId(cmd.BookingId),
+                (booking, cmd) => {}
+            );
         }
     }
 }

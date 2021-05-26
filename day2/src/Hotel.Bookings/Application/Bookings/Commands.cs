@@ -13,5 +13,7 @@ namespace Hotel.Bookings.Application.Bookings {
             string         Currency,
             DateTimeOffset BookingDate
         );
+
+        public record RecordPayment(string BookingId, float PaidAmount, string Currency, string PaymentId);
     }
 }
