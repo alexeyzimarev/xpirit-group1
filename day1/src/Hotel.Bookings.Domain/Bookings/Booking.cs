@@ -55,7 +55,15 @@ namespace Hotel.Bookings.Domain.Bookings {
 
         protected override BookingState When(object evt) {
             return evt switch {
-                BookingEvents.RoomBooked booked => State with { },
+                BookingEvents.RoomBooked booked => State with {
+                    Id = booked.BookingId,
+                    RoomId = new RoomId(booked.RoomId),
+                    Period = new StayPeriod(booked.CheckInDate, booked.CheckOutDate),
+                    GuestId = booked.GuestId,
+                    Price = new Money(booked.BookingPrice, booked.Currency),
+                    Outstanding = new Money(booked.OutstandingAmount, booked.Currency),
+                    Paid = booked.Paid
+                },
                 _ => State
             };
         }
