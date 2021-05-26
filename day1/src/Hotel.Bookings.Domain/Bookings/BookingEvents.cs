@@ -1,8 +1,8 @@
 using System;
 
-namespace Hotel.Bookings.Application.Bookings {
-    public static class BookingCommands {
-        public record BookRoom(
+namespace Hotel.Bookings.Domain.Bookings {
+    public static class BookingEvents {
+        public record RoomBooked(
             string         BookingId,
             string         GuestId,
             string         RoomId,
@@ -10,7 +10,9 @@ namespace Hotel.Bookings.Application.Bookings {
             DateTimeOffset CheckOutDate,
             float          BookingPrice,
             float          PrepaidAmount,
+            float          OutstandingAmount,
             string         Currency,
+            bool           Paid,
             DateTimeOffset BookingDate
         );
     }

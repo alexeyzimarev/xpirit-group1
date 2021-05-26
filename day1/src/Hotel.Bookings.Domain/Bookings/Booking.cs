@@ -13,22 +13,29 @@ namespace Hotel.Bookings.Domain.Bookings {
             RoomId          roomId,
             StayPeriod      period,
             Money           price,
+            Money           prepaid,
             DateTimeOffset  bookedAt,
             IsRoomAvailable isRoomAvailable
         ) {
             EnsureDoesntExist();
             await EnsureRoomAvailable(roomId, period, isRoomAvailable);
 
-            ChangeState(
-                State with {
-                    Id = bookingId,
-                    GuestId = guestId,
-                    RoomId = roomId,
-                    Price = price,
-                    Period = period,
-                    Outstanding = price,
-                    Paid = price == 0
-                }
+            var outstanding = price - prepaid;
+
+            Apply(
+                new BookingEvents.RoomBooked(
+                    bookingId,
+                    guestId,
+                    roomId,
+                    period.CheckIn,
+                    period.CheckOut,
+                    price.Amount,
+                    prepaid.Amount,
+                    outstanding.Amount,
+                    price.Currency,
+                    outstanding.Amount == 0,
+                    bookedAt
+                )
             );
         }
 
@@ -47,7 +54,10 @@ namespace Hotel.Bookings.Domain.Bookings {
         }
 
         protected override BookingState When(object evt) {
-            throw new NotImplementedException();
+            return evt switch {
+                BookingEvents.RoomBooked booked => State with { },
+                _ => State
+            };
         }
     }
 }

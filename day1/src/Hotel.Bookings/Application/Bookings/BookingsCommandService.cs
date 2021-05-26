@@ -15,6 +15,7 @@ namespace Hotel.Bookings.Application.Bookings {
                         new RoomId(cmd.RoomId),
                         new StayPeriod(cmd.CheckInDate, cmd.CheckOutDate),
                         new Money(cmd.BookingPrice, cmd.Currency),
+                        new Money(cmd.PrepaidAmount, cmd.Currency),
                         DateTimeOffset.Now,
                         (id, period) => new ValueTask<bool>(true)
                     );
