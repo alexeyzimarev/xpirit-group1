@@ -2,7 +2,11 @@ using System.Threading.Tasks;
 using EventStore.Client;
 using Eventuous;
 using Eventuous.EventStoreDB;
+using Eventuous.Projections.MongoDB;
+using Eventuous.Subscriptions;
+using Hotel.Bookings.Application;
 using Hotel.Bookings.Application.Bookings;
+using Hotel.Bookings.Application.Projections;
 using Hotel.Bookings.Domain;
 using Hotel.Bookings.Domain.Bookings;
 using Microsoft.AspNetCore.Builder;
@@ -33,6 +37,9 @@ namespace Hotel.Bookings {
             services.AddSingleton<IEventStore, EsdbEventStore>();
             services.AddSingleton<IAggregateStore, AggregateStore>();
             services.AddSingleton(DefaultEventSerializer.Instance);
+            services.AddSingleton<ICheckpointStore, MongoCheckpointStore>();
+
+            services.AddSubscription<ProjectionSubscription>().AddEventHandler<BookingProjection>();
 
             // Application
             services.AddSingleton<BookingsCommandService>();

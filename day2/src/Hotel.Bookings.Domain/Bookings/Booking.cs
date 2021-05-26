@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Eventuous;
+using static Hotel.Bookings.Domain.Bookings.BookingEvents;
 using static Hotel.Bookings.Domain.Services;
 
 namespace Hotel.Bookings.Domain.Bookings {
@@ -17,11 +18,11 @@ namespace Hotel.Bookings.Domain.Bookings {
         ) {
             EnsureDoesntExist();
             await EnsureRoomAvailable(roomId, period, isRoomAvailable);
-            
+
             var outstanding = price - prepaid;
 
             Apply(
-                new BookingEvents.RoomBooked(
+                new V1.RoomBooked(
                     bookingId,
                     guestId,
                     roomId,
@@ -31,19 +32,32 @@ namespace Hotel.Bookings.Domain.Bookings {
                     prepaid.Amount,
                     outstanding.Amount,
                     price.Currency,
-                    outstanding.Amount == 0,
                     bookedAt
                 )
             );
+
+            var isFullyPaid = outstanding.Amount == 0;
+
+            if (isFullyPaid)
+                Apply(new V1.BookingFullyPaid(State.Id));
         }
 
         public void RecordPayment(
-            Money           paid,
-            ConvertCurrency convertCurrency,
-            string          paidBy,
-            DateTimeOffset  paidAt
+            Money          paid,
+            string         paymentId,
+            string         paidBy,
+            DateTimeOffset paidAt
         ) {
             EnsureExists();
+            
+            var outstanding = State.Outstanding - paid;
+
+            Apply(new V2.PaymentRecorded(State.Id, paid.Amount,  outstanding.Amount, paid.Currency, paymentId));
+            
+            var isFullyPaid = State.Outstanding.Amount == 0;
+
+            if (isFullyPaid)
+                Apply(new V1.BookingFullyPaid(State.Id));
         }
 
         static async Task EnsureRoomAvailable(RoomId roomId, StayPeriod period, IsRoomAvailable isRoomAvailable) {
