@@ -39,7 +39,9 @@ namespace Hotel.Bookings {
             services.AddSingleton(DefaultEventSerializer.Instance);
             services.AddSingleton<ICheckpointStore, MongoCheckpointStore>();
 
-            services.AddSubscription<ProjectionSubscription>().AddEventHandler<BookingProjection>();
+            services.AddSubscription<ProjectionSubscription>()
+                .AddEventHandler<BookingProjection>()
+                .AddEventHandler<MyBookingsProjection>();
 
             // Application
             services.AddSingleton<BookingsCommandService>();

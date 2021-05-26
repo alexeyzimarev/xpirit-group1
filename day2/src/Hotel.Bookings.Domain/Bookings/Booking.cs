@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Eventuous;
 using static Hotel.Bookings.Domain.Bookings.BookingEvents;
@@ -49,6 +50,9 @@ namespace Hotel.Bookings.Domain.Bookings {
             DateTimeOffset paidAt
         ) {
             EnsureExists();
+
+            if (State.PaymentRecords.Any(x => x.PaymentId == paymentId))
+                return;
             
             var outstanding = State.Outstanding - paid;
 
