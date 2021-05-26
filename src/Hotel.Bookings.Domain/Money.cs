@@ -1,5 +1,5 @@
 using System.Linq;
-using CoreLib;
+using Eventuous;
 
 namespace Hotel.Bookings.Domain {
     public record Money {

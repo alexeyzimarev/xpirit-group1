@@ -1,12 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using CoreLib;
+using Eventuous;
 using static Hotel.Bookings.Domain.Services;
 
 namespace Hotel.Bookings.Domain.Bookings {
-    public class Booking : Aggregate<BookingId, BookingState> {
-        public Booking() => State = new BookingState();
-
+    public class Booking : Aggregate<BookingState, BookingId> {
         public async Task BookRoom(
             BookingId       bookingId,
             string          guestId,
@@ -19,17 +17,17 @@ namespace Hotel.Bookings.Domain.Bookings {
             EnsureDoesntExist();
             await EnsureRoomAvailable(roomId, period, isRoomAvailable);
 
-            ChangeState(
-                State with {
-                    Id = bookingId,
-                    GuestId = guestId,
-                    RoomId = roomId,
-                    Price = price,
-                    Period = period,
-                    Outstanding = price,
-                    Paid = price == 0
-                }
-            );
+            // ChangeState(
+            //     State with {
+            //         Id = bookingId,
+            //         GuestId = guestId,
+            //         RoomId = roomId,
+            //         Price = price,
+            //         Period = period,
+            //         Outstanding = price,
+            //         Paid = price == 0
+            //     }
+            // );
         }
 
         public void RecordPayment(

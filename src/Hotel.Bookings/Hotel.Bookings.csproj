@@ -6,16 +6,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="EventStore.Client.Grpc.Streams" Version="20.6.1" />
-      <PackageReference Include="Grpc.Net.Client" Version="2.33.1" />
-      <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
-      <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+        <PackageReference Include="Eventuous.EventStoreDB" Version="0.4.4" />
+        <PackageReference Include="Eventuous.Projections.MongoDB" Version="0.4.4" />
+        <PackageReference Include="Eventuous.Subscriptions.EventStoreDB" Version="0.4.4" />
+        <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CoreLib\CoreLib.csproj" />
-      <ProjectReference Include="..\Hotel.Bookings.Domain\Hotel.Bookings.Domain.csproj" />
-      <ProjectReference Include="..\MongoTools\MongoTools.csproj" />
+        <ProjectReference Include="..\Hotel.Bookings.Domain\Hotel.Bookings.Domain.csproj" />
     </ItemGroup>
 
 </Project>

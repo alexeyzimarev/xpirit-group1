@@ -1,5 +1,5 @@
-using CoreLib;
+using Eventuous;
 
 namespace Hotel.Bookings.Domain {
-    public record RoomId(string Value) : AggregateId(Value) { }
+    public record RoomId(string Value) : AggregateId(Value);
 }

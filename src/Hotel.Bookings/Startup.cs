@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
-using CoreLib;
 using EventStore.Client;
+using Eventuous;
+using Eventuous.EventStoreDB;
 using Hotel.Bookings.Application.Bookings;
 using Hotel.Bookings.Domain;
-using Hotel.Bookings.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +26,9 @@ namespace Hotel.Bookings {
                     Configuration["MongoDb:Database"]
                 )
             );
-            services.AddSingleton<IAggregateStore, MongoAggregateStore>();
+            services.AddEventStoreClient(Configuration["EventStore:ConnectionString"]);
+            services.AddSingleton<IEventStore, EsdbEventStore>();
+            services.AddSingleton<IAggregateStore, AggregateStore>();
 
             // Application
             services.AddSingleton<BookingsCommandService>();

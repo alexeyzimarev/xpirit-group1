@@ -1,14 +1,15 @@
 using System;
 using System.Threading.Tasks;
-using CoreLib;
+using Eventuous;
 using Hotel.Bookings.Domain;
 using Hotel.Bookings.Domain.Bookings;
 
 namespace Hotel.Bookings.Application.Bookings {
-    public class BookingsCommandService : CommandService<Booking, BookingId, BookingState> {
+    public class BookingsCommandService : ApplicationService<Booking, BookingState, BookingId> {
         public BookingsCommandService(IAggregateStore store) : base(store) {
-            OnNew<BookingCommands.BookRoom>(
-                (booking, cmd) => {
+            OnNewAsync<BookingCommands.BookRoom>(
+                cmd => new BookingId(cmd.BookingId),
+                (booking, cmd, _) => {
                     return booking.BookRoom(
                         new BookingId(cmd.BookingId),
                         cmd.GuestId,

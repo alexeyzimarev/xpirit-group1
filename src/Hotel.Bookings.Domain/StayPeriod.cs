@@ -1,5 +1,5 @@
 using System;
-using CoreLib;
+using Eventuous;
 
 namespace Hotel.Bookings.Domain {
     public record StayPeriod {

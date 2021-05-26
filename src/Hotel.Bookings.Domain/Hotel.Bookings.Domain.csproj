@@ -8,4 +8,8 @@
     <ProjectReference Include="..\CoreLib\CoreLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Eventuous" Version="0.4.4" />
+  </ItemGroup>
+
 </Project>

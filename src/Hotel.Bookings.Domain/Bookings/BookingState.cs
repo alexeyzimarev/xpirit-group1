@@ -1,7 +1,7 @@
-using CoreLib;
+using Eventuous;
 
 namespace Hotel.Bookings.Domain.Bookings {
-    public record BookingState : AggregateState<BookingId> {
+    public record BookingState : AggregateState<BookingState, BookingId> {
         public string     GuestId     { get; set; }
         public RoomId     RoomId      { get; set; }
         public StayPeriod Period      { get; set; }
